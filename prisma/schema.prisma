@@ -1,0 +1,149 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+
+  memberships     GroupMember[]
+  expenseSplits   ExpenseSplit[]
+  messages        Message[]
+  notifications   Notification[]
+  chatMessages    ChatMessage[]              @relation("ChatMessageSender")
+  conversations   ConversationParticipant[]
+  createdGroups   Group[]       @relation("GroupCreator")
+  paidExpenses    Expense[]     @relation("ExpensePayer")
+  settlementsFrom Settlement[]  @relation("SettlementFrom")
+  settlementsTo   Settlement[]  @relation("SettlementTo")
+}
+
+model Group {
+  id          String   @id @default(cuid())
+  name        String
+  createdById String
+  createdAt   DateTime @default(now())
+
+  createdBy   User          @relation("GroupCreator", fields: [createdById], references: [id])
+  members     GroupMember[]
+  expenses    Expense[]
+  settlements Settlement[]
+}
+
+model GroupMember {
+  id      String @id @default(cuid())
+  groupId String
+  userId  String
+
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, userId])
+}
+
+model Expense {
+  id        String   @id @default(cuid())
+  title     String
+  amount    Float
+  paidById  String
+  groupId   String
+  splitType String
+  createdAt DateTime @default(now())
+
+  paidBy   User           @relation("ExpensePayer", fields: [paidById], references: [id])
+  group    Group          @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  splits   ExpenseSplit[]
+  messages Message[]
+}
+
+model ExpenseSplit {
+  id        String @id @default(cuid())
+  expenseId String
+  userId    String
+  amount    Float
+
+  expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  expenseId String
+  userId    String
+  content   String
+  createdAt DateTime @default(now())
+
+  expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Settlement {
+  id         String   @id @default(cuid())
+  fromUserId String
+  toUserId   String
+  amount     Float
+  groupId    String
+  createdAt  DateTime @default(now())
+
+  fromUser User  @relation("SettlementFrom", fields: [fromUserId], references: [id])
+  toUser   User  @relation("SettlementTo", fields: [toUserId], references: [id])
+  group    Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead, createdAt])
+}
+
+model Conversation {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  participants ConversationParticipant[]
+  messages     ChatMessage[]
+}
+
+model ConversationParticipant {
+  id             String @id @default(cuid())
+  conversationId String
+  userId         String
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+  @@index([userId])
+}
+
+model ChatMessage {
+  id             String   @id @default(cuid())
+  conversationId String
+  senderId       String
+  content        String
+  isRead         Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User         @relation("ChatMessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId, createdAt])
+  @@index([senderId])
+  @@index([isRead])
+}

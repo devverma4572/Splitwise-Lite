@@ -1,20 +1,44 @@
 {
-  "name": "splitwise-lite-temp",
+  "name": "splitwise-lite",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev"
   },
   "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "@radix-ui/react-avatar": "^1.1.12",
+    "@radix-ui/react-dialog": "^1.1.16",
+    "@radix-ui/react-label": "^2.1.9",
+    "@radix-ui/react-select": "^2.3.0",
+    "@radix-ui/react-separator": "^1.1.9",
+    "@radix-ui/react-slot": "^1.2.5",
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "jose": "^6.2.3",
+    "lucide-react": "^1.18.0",
     "next": "16.2.9",
+    "next-auth": "^4.24.14",
+    "prisma": "^6.19.3",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "socket.io": "^4.8.3",
+    "socket.io-client": "^4.8.3",
+    "tailwind-merge": "^3.6.0",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/bcrypt": "^6.0.0",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
