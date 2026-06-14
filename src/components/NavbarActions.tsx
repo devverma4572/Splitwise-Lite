@@ -8,6 +8,7 @@ import {
   LayoutDashboard,
   LogOut,
   MessageCircle,
+  Upload,
   User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -181,6 +182,18 @@ export default function NavbarActions({ userName }: NavbarActionsProps) {
               {unreadChats}
             </span>
           )}
+        </Link>
+      </Button>
+
+      <Button
+        variant={pathname.startsWith("/import") ? "secondary" : "ghost"}
+        size="sm"
+        asChild
+        className="hidden md:inline-flex"
+      >
+        <Link href="/import">
+          <Upload className="h-4 w-4" />
+          Import
         </Link>
       </Button>
 

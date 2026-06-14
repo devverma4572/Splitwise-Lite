@@ -147,3 +147,12 @@ model ChatMessage {
   @@index([senderId])
   @@index([isRead])
 }
+
+model ImportReport {
+  id           String   @id @default(cuid())
+  createdAt    DateTime @default(now())
+  totalRows    Int
+  importedRows Int
+  anomalyCount Int
+  reportJson   Json
+}

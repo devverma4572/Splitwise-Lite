@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { Plus, Upload } from "lucide-react";
 import { getSession } from "@/lib/auth";
 import {
   getUserBalanceSummaryForGroup,
@@ -53,12 +53,20 @@ export default async function DashboardPage() {
             Welcome back, {session!.name}
           </p>
         </div>
-        <Button asChild>
-          <Link href="/groups/create">
-            <Plus className="h-4 w-4" />
-            Create Group
-          </Link>
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" asChild>
+            <Link href="/import">
+              <Upload className="h-4 w-4" />
+              Import CSV
+            </Link>
+          </Button>
+          <Button asChild>
+            <Link href="/groups/create">
+              <Plus className="h-4 w-4" />
+              Create Group
+            </Link>
+          </Button>
+        </div>
       </div>
 
       <section>

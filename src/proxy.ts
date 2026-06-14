@@ -36,5 +36,7 @@ export const config = {
     "/profile",
     "/chats",
     "/chats/:path*",
+    "/import",
+    "/import/:path*",
   ],
 };
